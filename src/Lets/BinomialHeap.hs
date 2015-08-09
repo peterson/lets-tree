@@ -3,8 +3,8 @@
 Lets.BinomialHeap
 
 A binomial heap is a heap consisting of a _collection_ of binomial trees. In
-particular, a binomial heap supports an efficient merge operations, allowing
-multiple heaps to be rapidly merged to form a new heap.
+particular, a binomial heap provides an efficient merge operation, allowing
+multiple heaps to be merged rapidly to form a new heap.
 
 Invariants
 
@@ -37,6 +37,7 @@ module Lets.BinomialHeap
 
   -- operations
   , insert
+  , deleteMin
   , fromList
   , toList
   , binSort
