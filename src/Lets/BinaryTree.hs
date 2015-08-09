@@ -4,6 +4,10 @@ Lets.BinaryTree
 
 A basic self-balancing binary tree.
 
+References
+
+[1] Wikipedia, "Binary Tree", http://en.wikipedia.org/wiki/Binary_tree
+
 -}
 
 
