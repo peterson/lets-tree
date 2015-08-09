@@ -1,0 +1,20 @@
+*~
+*#*
+
+# CABAL
+/dist
+/cabal-dev
+/.cabal-sandbox
+/cabal.sandbox.config
+
+# Haskell Program Coverage
+/.hpc
+
+# Leksah
+*.lkshs
+
+# ctags
+TAGS
+
+*.swp
+
