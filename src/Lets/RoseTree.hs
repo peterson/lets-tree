@@ -9,6 +9,10 @@ References
 
 [1] Wikipedia, "Rose Tree", http://en.wikipedia.org/wiki/Rose_tree
 
+[2] Jeremy Gibbons, "Origami Programming", appears in The Fun of Programming
+    edited by J. Gibbons and O. de Moor, Palgrave McMillan, 2003, pages 41-60.
+    PDF available at: http://www.staff.science.uu.nl/~3860418/msc/11_infomtpt/papers/origami-programming_Gibbons.pdf
+
 -}
 
 
@@ -39,8 +43,10 @@ module Lets.RoseTree
 --
 
 data RoseTree a = Empty
-                | Node a [RoseTree a]
+                | Node a (Forest a)
                 deriving (Show, Eq)
+
+type Forest a = [RoseTree a]
 
 --
 -- constructors
