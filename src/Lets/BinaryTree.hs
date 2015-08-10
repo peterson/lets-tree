@@ -8,6 +8,9 @@ References
 
 [1] Wikipedia, "Binary Tree", http://en.wikipedia.org/wiki/Binary_tree
 
+[2] John Hargrove, "The AVL Tree Rotations Tutorial", version 1.0.1, March 2007.
+PDF available at: http://pages.cs.wisc.edu/~paton/readings/liblitVersion/AVL-Tree-Rotations.pdf
+
 -}
 
 
@@ -63,9 +66,9 @@ height (Node l v r) = 1 + max (height l) (height r)
 balanced :: Tree a -> Bool
 balanced (Leaf) = True
 balanced (Node l _ r)=
-  mindiff && balanced l && balanced r
+  bal && balanced l && balanced r
   where
-    mindiff = abs (height l - height r) <= 1
+    bal = abs (height l - height r) <= 1
 
 
 --
@@ -112,7 +115,13 @@ sample = foldr insert empty (reverse [1..20])
 
 
 --
--- Transformations
+-- Tree Rotations
+--
+-- In order for a binary tree to remain balanced as additional elements are
+-- inserted, a combination of single (and more occasionally, double) tree
+-- rotations are performed to transform the shape of the tree's sub-trees.
+-- Reference [2] provides a good guide to these rotation operations, and the
+-- rotations are implemented below, using pattern-match syntax.
 --
 
 --
@@ -148,15 +157,16 @@ rotateR (Node (Node d b e) a c) = Node d b (Node e a c)
 --
 -- perform a RL "double rotation"
 --
--- rotate left sub-tree to the left, followed by root to the right
+-- RL => rotate left sub-tree to the left, followed by the root of tree to the right
 
 rotateRL :: Tree a -> Tree a
 rotateRL (Node l v r) = rotateR (Node (rotateL l) v r)
 
+
 --
 -- perform a LR "double rotation"
 --
--- rotate right sub-tree to the right, followed by root to the left
+-- LR => rotate right sub-tree to the right, followed by the root of tree to the left
 
 rotateLR :: Tree a -> Tree a
 rotateLR (Node l v r) = rotateL (Node l v (rotateR r))
