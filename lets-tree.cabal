@@ -26,6 +26,23 @@ library
                        Lets.RoseTree
   -- other-modules:
   -- other-extensions:
-  build-depends:       base >=4.8 && <4.9
+  build-depends:       base >=4.8 && <4.9,
+                       QuickCheck >= 2.0
+
   hs-source-dirs:      src
+  default-language:    Haskell2010
+
+
+test-suite tests
+  type:                exitcode-stdio-1.0
+
+  build-depends:       base >=4.8 && <4.9,
+                       QuickCheck >= 2.0,
+                       test-framework >= 0.4,
+                       test-framework-quickcheck2 >= 0.2.0,
+                       lets-tree
+
+  hs-source-dirs:      tests
+  ghc-options:         -Wall -threaded
+  main-is:             Main.hs
   default-language:    Haskell2010
