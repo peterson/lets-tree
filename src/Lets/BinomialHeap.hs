@@ -32,6 +32,7 @@ module Lets.BinomialHeap
   -- constructors
   , empty
   , singleton
+  , node
 
   -- properties
 
@@ -41,6 +42,12 @@ module Lets.BinomialHeap
   , fromList
   , toList
   , binSort
+
+  -- other
+  , value
+  , rank
+  , children
+  , size
 
   )
   where
@@ -152,6 +159,13 @@ toList h = extractMin h : toList (deleteMin h)
 binSort :: Ord a => [a] -> [a]
 binSort = toList . fromList
 
+
+--
+-- test helpers
+--
+
+size :: Ord a => BinHeap a -> Int
+size = length . toList
 
 --
 -- sample trees and heaps for testing purposes, drawn from reference [2]
