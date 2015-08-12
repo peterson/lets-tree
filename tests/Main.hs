@@ -20,6 +20,7 @@ tests = [
         --         testCase "sort3" test_sort3
         --     ],
         testGroup "Binomial Heap" [
+                testProperty "is a minimum heap" Binom.prop_heap_is_minimum,
                 testProperty "has one tree per rank" Binom.prop_heap_one_tree_per_rank,
                 testProperty "has correct number of trees" Binom.prop_heap_max_trees,
                 testProperty "has correct heap size" Binom.prop_heap_size,

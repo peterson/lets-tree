@@ -14,7 +14,19 @@ instance (Ord a, Arbitrary a) => Arbitrary (BinHeap a) where
   arbitrary = liftM fromList arbitrary
 
 
--- binomial heaps contain at most 1 tree of rank r
+-- the value of each node is less than or equal to the value of each
+-- of its children.
+prop_heap_is_minimum :: BinHeap Int -> Bool
+prop_heap_is_minimum ts =
+  all nodes_minimum_in ts
+  where
+    nodes_minimum_in t =
+      case children t of
+        [] -> True
+        _  -> value t <= minimum (value <$> children t) && all nodes_minimum_in (children t)
+
+
+-- binomial heaps contain at most 1 tree of any rank.
 prop_heap_one_tree_per_rank :: BinHeap Int -> Bool
 prop_heap_one_tree_per_rank ts =
   nub ranks == ranks -- no dups
@@ -32,7 +44,7 @@ prop_heap_max_trees ts =
     lg = logBase (2 :: Double) -- added :: to squish warning
 
 
--- a heap with trees of rank 1, 2, .. k contains i=1..k, sum(2^r_i) nodes
+-- a heap with trees of rank 0, 1, 2, .. k contains exactly i=0..k, sum(2^r_i) nodes
 prop_heap_size :: BinHeap Int -> Bool
 prop_heap_size ts =
   heap_size == ranksum
