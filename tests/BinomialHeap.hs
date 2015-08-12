@@ -32,22 +32,21 @@ prop_heap_max_trees ts =
     lg = logBase (2 :: Double) -- added :: to squish warning
 
 
--- a tree of rank r contains 2^r nodes
-prop_heap_tree_size :: BinHeap Int -> Bool
-prop_heap_tree_size ts =
-  -- and $ sized <$> ts
-  all sized ts -- ahh, much nicer!
-  where
-    sized t = size [t] == 2^(rank t) -- treat each t as a [t] in order to use 'size'
-
-
 -- a heap with trees of rank 1, 2, .. k contains i=1..k, sum(2^r_i) nodes
 prop_heap_size :: BinHeap Int -> Bool
 prop_heap_size ts =
-  size ts == ranksum
+  heap_size == ranksum
   where
-    ranksum = sum $ (2^) <$> ranks
-    ranks = rank <$> ts
+    heap_size = size ts
+    ranksum = sum $ (2^) <$> (rank <$> ts)
+
+
+-- a tree of rank r contains 2^r nodes
+prop_heap_tree_sizes :: BinHeap Int -> Bool
+prop_heap_tree_sizes ts =
+  all correct_sized ts
+  where
+    correct_sized t = size [t] == 2^(rank t) -- treat each t as a [t] in order to use 'size'
 
 
 -- minimum value of the heap is contained in a root node of one of the trees in heap

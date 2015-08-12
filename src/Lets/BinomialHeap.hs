@@ -35,6 +35,10 @@ module Lets.BinomialHeap
   , node
 
   -- properties
+  , value
+  , rank
+  , children
+  , size
 
   -- operations
   , insert
@@ -42,12 +46,6 @@ module Lets.BinomialHeap
   , fromList
   , toList
   , binSort
-
-  -- other
-  , value
-  , rank
-  , children
-  , size
 
   )
   where
@@ -66,7 +64,21 @@ type BinHeap a = [BinTree a] -- n.b. 'type' definition, not 'data' definition !
 
 
 --
--- operations
+-- constructors
+--
+
+empty :: BinHeap a
+empty = []
+
+singleton :: a -> BinHeap a
+singleton v = [node v]
+
+node :: a -> BinTree a
+node v = Node 0 v []
+
+
+--
+-- properties
 --
 
 value :: BinTree a -> a
@@ -78,17 +90,16 @@ rank (Node r _ _) = r
 children :: BinTree a -> [BinTree a]
 children (Node _ _ c) = c
 
-node :: a -> BinTree a
-node v = Node 0 v []
+size :: Ord a => BinHeap a -> Int
+size = length . toList
 
-singleton :: a -> BinHeap a
-singleton v = [node v]
-
-empty :: BinHeap a
-empty = []
 
 --
--- combine takes two trees of rank n, and produces a single tree of rank n+1
+-- operations
+--
+
+--
+-- | Takes two trees of rank /n/ and combines them into a single tree of rank /n+1/.
 
 combine :: Ord a => BinTree a -> BinTree a -> BinTree a
 combine t1@(Node r v1 c1) t2@(Node _ v2 c2)
@@ -97,7 +108,7 @@ combine t1@(Node r v1 c1) t2@(Node _ v2 c2)
 
 
 --
--- merge takes two binary heaps and produces a single (merged) heap
+-- | Takes two binomial heaps and merges them into a single binomial heap.
 
 merge :: Ord a => BinHeap a -> BinHeap a -> BinHeap a
 merge h1 [] = h1
@@ -109,22 +120,27 @@ merge h1@(t1:ts1) h2@(t2:ts2)
 
 
 --
--- insert a value into the heap
+-- | Inserts a value into the heap. This is done by creating a singleton heap
+-- for the value and then merging this with the existing heap.
 
 insert :: Ord a => a -> BinHeap a -> BinHeap a
 insert v h = merge (singleton v) h
 
 
 --
--- extract the minimum value in heap by checking for the minimum of
--- the values of the root of each tree in the heap.
+-- | Extracts the minimum value in the heap. This is done by checking for the
+-- value amongst the root nodes of each tree in the heap. This makes use of the
+-- property that the minimum value is always stored in one of the root nodes of
+-- the heap's trees.
 
 extractMin :: Ord a => BinHeap a -> a
 extractMin h = minimum $ value <$> h
 
 
 --
--- delete minimum value from the heap
+-- | Deletes the minimum value from the heap. This is done by merging the remainder
+-- of the heap with a new heap that is formed from from children (if any) of the
+-- node to be removed.
 
 deleteMin :: Ord a => BinHeap a -> BinHeap a
 deleteMin h = merge ch h'
@@ -136,36 +152,37 @@ deleteMin h = merge ch h'
 
 
 --
--- treeWithRoot takes a value and a heap and returns the first tree in the heap
--- with the value v.
+-- | Takes a value and a heap and returns the /first/ tree in the heap that has
+-- a root node of this value.
 
 treeWithRoot :: Eq a => a -> BinHeap a -> BinTree a
 treeWithRoot v h = head $ filter (\x -> value x == v) h
 
 
---
--- binomial sorting
---
--- > binSort "BinomialHeap"
--- > "BHaaeiilmnop"
+-- | Builds a binomial heap from a list.
 
 fromList :: Ord a => [a] -> BinHeap a
 fromList = foldr insert empty
+
+
+-- | Builds an ordered list from a binomial heap.
 
 toList :: Ord a => BinHeap a -> [a]
 toList [] = []
 toList h = extractMin h : toList (deleteMin h)
 
+
+--
+-- | Performs a sort operation using the binomial heap. This is done by firstly
+-- building a heap from a (probably unordered) list, then recursively extracting
+-- the elements in order to produce a sorted list.
+--
+-- >>> binSort "BinomialHeap"
+-- "BHaaeiilmnop"
+
 binSort :: Ord a => [a] -> [a]
 binSort = toList . fromList
 
-
---
--- test helpers
---
-
-size :: Ord a => BinHeap a -> Int
-size = length . toList
 
 --
 -- sample trees and heaps for testing purposes, drawn from reference [2]
