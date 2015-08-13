@@ -5,7 +5,7 @@ import           Test.Framework                       (Test, defaultMain,
 import           Test.Framework.Providers.QuickCheck2 (testProperty)
 
 
--- import BinaryTree as BT
+import BinaryTree as BinTree
 import           BinomialHeap                         as Binom
 
 main :: IO ()
@@ -13,12 +13,10 @@ main = defaultMain tests
 
 tests :: [Test]
 tests = [
-        -- testGroup "Binary Tree" [
-        --         testProperty "balanced" BT.prop_balanced,
-        --         testProperty "sort" BT.prop_sort
-        --         testProperty "sort2" prop_sort2,
-        --         testCase "sort3" test_sort3
-        --     ],
+        testGroup "Binary Tree" [
+                testProperty "is ordered" BinTree.prop_bintree_ordered,
+                testProperty "is balanced" BinTree.prop_bintree_balanced
+            ],
         testGroup "Binomial Heap" [
                 testProperty "is a minimum heap" Binom.prop_heap_is_minimum,
                 testProperty "has one tree per rank" Binom.prop_heap_one_tree_per_rank,

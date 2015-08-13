@@ -13,7 +13,6 @@ PDF available at: http://pages.cs.wisc.edu/~paton/readings/liblitVersion/AVL-Tre
 
 -}
 
-
 module Lets.BinaryTree
   ( Tree
 
@@ -23,8 +22,11 @@ module Lets.BinaryTree
   , empty
 
   -- properties
+  , value
+  , ordered
   , height
   , balanced
+
 
   -- operations
   , insert
@@ -32,6 +34,8 @@ module Lets.BinaryTree
   , sample
   )
   where
+
+import Data.Maybe (fromJust)
 
 --
 -- definitions
@@ -54,14 +58,32 @@ node v = Node Leaf v Leaf
 empty :: Tree a
 empty = leaf
 
+-- children :: Tree a -> Maybe (Tree a,Tree a)
+-- children Leaf = Nothing
+-- children (Node l v r) = Just (l,r)
+
 --
 -- properties
 --
+
+value :: Tree a -> Maybe a
+value Leaf = Nothing
+value (Node _ v _) = Just v
+
+
+ordered :: Ord a => Tree a -> Bool
+ordered Leaf = True
+ordered (Node Leaf _ Leaf) = True
+ordered (Node Leaf v r) = v <= (fromJust $ value r) && ordered r
+ordered (Node l v Leaf) = (fromJust $ value l) <= v && ordered l
+ordered (Node l v r) = (fromJust $ value l) <= v && v <= (fromJust $ value r) && ordered l && ordered r
+
 
 height :: Tree a -> Int
 height Leaf = 0
 height (Node Leaf _ Leaf) = 0
 height (Node l v r) = 1 + max (height l) (height r)
+
 
 balanced :: Tree a -> Bool
 balanced (Leaf) = True
